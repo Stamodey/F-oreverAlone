@@ -14,7 +14,7 @@ let main avrg =
     let volumeOfCylinder radius height =
         areaOfCircle radius * height
     
-    printfn "С использованием суперпозиции:"
+    printfn "С использованием каррирования:"
     printfn "Площадь круга: %f" (areaOfCircle radius)
     printfn "Объем цилиндра: %f" (volumeOfCylinder radius height)
     
@@ -22,9 +22,9 @@ let main avrg =
         fun radius -> radius * radius * System.Math.PI
 
     let volumeOfCylinderC = 
-        fun radius -> fun height -> areaOfCircleC radius * height
+        areaOfCircleC >> (fun area -> fun height -> areaOfCircleC area * height)
 
-    printfn "\nС использованием каррирования:"
+    printfn "\nС использованием суперпозиции:"
     printfn "Площадь круга: %f" (areaOfCircleC radius)
     printfn "Объем цилиндра: %f" ((volumeOfCylinderC radius) height)
 
