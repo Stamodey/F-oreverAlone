@@ -1,3 +1,5 @@
+open System
+
 let rec sumOfDigits num =
     if num = 0 then 
         0
