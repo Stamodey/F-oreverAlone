@@ -97,3 +97,45 @@ printfn "Сумма цифр, взаимно простых с 365 и > 3: %d"
 
 printfn "Произведение цифр, взаимно простых с 271828 и > 1: %d" 
     (processFilteredCoprimeDigits 271828 (*) 1 (fun x -> x > 1))
+
+// ----- task 16  -----
+let countCoprimeDigits number =
+    let rec count remainingNumber accumulator =
+        match remainingNumber with
+        | 0 -> accumulator
+        | _ ->
+            let digit, nextNumber = remainingNumber % 10, remainingNumber / 10
+            let updatedAccumulator = accumulator + (if isCoprime digit number then 1 else 0)
+            count nextNumber updatedAccumulator
+    count number 0
+
+let sumDigitsDivisibleBy3 number =
+    let rec sum remainingNumber accumulator =
+        match remainingNumber with
+        | 0 -> accumulator
+        | _ ->
+            let digit, nextNumber = remainingNumber % 10, remainingNumber / 10
+            let updatedAccumulator = accumulator + (if digit % 3 = 0 then digit else 0)
+            sum nextNumber updatedAccumulator
+    sum number 0
+
+let bestCoprimeDivisor number =
+    let rec findDivisors divisor maxDivisor maxCount =
+        match divisor with
+        | 0 -> maxDivisor
+        | _ ->
+            let nextDivisor = divisor - 1
+            let updatedMax =
+                match number % divisor with
+                | 0 ->
+                    let count = countCoprimeDigits divisor
+                    if count > maxCount then (divisor, count) else (maxDivisor, maxCount)
+                | _ -> (maxDivisor, maxCount)
+            findDivisors nextDivisor (fst updatedMax) (snd updatedMax)
+    findDivisors number 1 0
+
+let testNumber = 365
+
+printfn "Количество цифр, взаимно простых с %d: %d" testNumber (countCoprimeDigits testNumber)
+printfn "Сумма цифр %d, делящихся на 3: %d" testNumber (sumDigitsDivisibleBy3 testNumber)
+printfn "Лучший взаимно простой делитель числа %d: %d" testNumber (bestCoprimeDivisor testNumber)
